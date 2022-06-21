@@ -176,30 +176,6 @@ for (let a = 1; a < 9; a++) {
         scene.add(object)
     });
 
-    //NEW CITY
-    const fbxLoader2 = new FBXLoader()
-    fbxLoader.load(
-    './uploads_files_969508_city.FBX',
-    (object) => {
-        object.traverse( function ( child ) {
-
-            if ( child.isMesh ) {
-
-                child.castShadow = false;
-                child.receiveShadow = false;
-               
-
-            }
-
-        } );
-        object.scale.set(.009, .009, .009)
-        // object.position.y += 0.5
-        // object.position.x -= 1.5
-        // object.position.z -= 0.5
-                
-        scene.add(object)
-    });
-
     // loding gltf 3d model CAR
     const loader = new GLTFLoader();
     loader.load('./free_car_001.gltf', (gltf) => {
