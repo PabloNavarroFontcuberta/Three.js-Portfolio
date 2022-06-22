@@ -13,6 +13,19 @@ var modal = document.getElementById("myModal");
 var loaderDiv = document.getElementById("loader");
 var loaderText = document.getElementById("loaderText");
 var modalText = document.getElementById("modalText");
+var loadingObjectsArray = ['','city.obj','delorean.fbx','car.gbl','AmbientLight','flag.jpg','flagupv.jpg'];
+var counter = 0;
+
+function displayObjects() {
+    if(counter === loadingObjectsArray.length - 1){
+        counter = 0;
+    }
+    else {
+        counter++;  
+    }
+    loaderText.innerHTML = "Loading " + loadingObjectsArray[counter];
+}
+
 
 
 //Loading function
@@ -20,7 +33,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
  }
  async function loadingObjects() {
-           
+    var myInterval = setInterval(function(){displayObjects()}, 1);   
        await sleep(3000)
         loaderDiv.style.display = "none";
         loaderText.style.display = "none";
@@ -72,6 +85,10 @@ document.body.appendChild(renderer.domElement)
 
 //COLUMNS
 const colGeometry = new THREE.BoxGeometry(0.1, 2.5, 0.1 )
+const colFlagGeometry = new THREE.BoxGeometry(0.05,3.68,0.07)
+const colFlagMaterial = new THREE.MeshBasicMaterial({
+    color: 0x00000
+})
 const colMaterial = new THREE.MeshBasicMaterial({
     color: 0x222222
 })
@@ -87,10 +104,14 @@ colLeft1.position.z = 10
 const colLeft2 = new THREE.Mesh(colGeometry, colMaterial)
 colLeft2.position.x = -1.5
 colLeft2.position.z = 11.3
+const colFlag = new THREE.Mesh(colFlagGeometry, colFlagMaterial)
+colFlag.position.x = 3
+colFlag.position.z = -7
 scene.add(colRight1)
 scene.add(colRight2)
 scene.add(colLeft1)
 scene.add(colLeft2)
+scene.add(colFlag)
 
 //MIDDLE LINES
 const geometry2 = new THREE.BoxGeometry(0.1, 0.001, 500 )
@@ -153,8 +174,73 @@ for (let a = 1; a < 9; a++) {
 
     scene.add(window["spotLight1" + a]);
   }
-    //DELOREAN
 
+  //Flag Cube
+  const cubeGeometry = new THREE.BoxGeometry( 1.5, 0.75, 0.05 );
+  
+  function addImageBitmap() {
+
+    new THREE.ImageBitmapLoader()
+        .setOptions( { imageOrientation: 'flipY' } )
+        .load( './textures/flag.jpg?' + performance.now(), function ( imageBitmap ) {
+
+            const texture = new THREE.CanvasTexture( imageBitmap );
+            const cubeMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+
+   
+            const cubeFlag = new THREE.Mesh( cubeGeometry, cubeMaterial )
+            cubeFlag.position.set( 3.8,1.5,-7 )
+            scene.add(cubeFlag)
+    
+
+        }, function ( p ) {
+
+            console.log( p );
+
+        }, function ( e ) {
+
+            console.log( e );
+
+        } );
+
+}
+addImageBitmap()
+
+//UPV Flag Cube
+const cubeGeometry2 = new THREE.BoxGeometry( 1.5, 1.5, 0.05 );
+  
+function addImageBitmap2() {
+
+  new THREE.ImageBitmapLoader()
+      .setOptions( { imageOrientation: 'flipY' } )
+      .load( './textures/flagupv.jpg?' + performance.now(), function ( imageBitmap ) {
+
+          const texture = new THREE.CanvasTexture( imageBitmap );
+          const cubeMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+
+ 
+          const cubeFlag = new THREE.Mesh( cubeGeometry2, cubeMaterial )
+          cubeFlag.position.set( 5.65,1,-0.9 )
+          cubeFlag.rotation.set(0,2.1 * Math.PI,0)
+          scene.add(cubeFlag)
+  
+
+      }, function ( p ) {
+
+          console.log( p );
+
+      }, function ( e ) {
+
+          console.log( e );
+
+      } );
+
+}
+addImageBitmap2()
+
+
+
+    //DELOREAN
     const fbxLoader = new FBXLoader()
     fbxLoader.load(
     './uploads_files_2027445_CyberpunkDeLorean.FBX',
